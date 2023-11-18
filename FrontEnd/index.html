@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>Weather</title>
+    <script>
+      window.addEventListener('load', () => {
+
+        //get element
+        let loading = document.querySelector('.loading')
+        let noData = document.querySelector('.no-data')
+        let content = document.querySelector('.content')
+        let locationTimeZone = document.querySelector('.location-timezone')
+        let currentDate = document.querySelector('.current-date')
+
+        let temperatureDescription = document.querySelector('.temperature-description')
+        let temperatureDegree = document.querySelector('.temperature-degree')
+        let iconPlacement = document.querySelector('.icon')
+
+        const apiUrl = `https://localhost:44340/api/Weather?locationCode=danang`
+
+        fetch(apiUrl)
+          .then((response) => {
+            try {
+              if (response.status === 200) {
+                return response.json()
+              } else {
+                return null;
+              }
+            } catch {
+              return null;
+            }
+            
+          })
+          .then((data) => {
+            if (data !== null) {
+              console.log(data)
+
+              const { temp_f, temp_c } = data.current
+              const { text } = data.current.condition
+              const { name, country, tz_id } = data.location
+
+              var localTime = new Date()
+
+              const iconUrl = data.current.condition.icon
+              const imgUrl = "<img src='https:" + iconUrl + "'>"
+
+              //set DOM elements from the API
+              //location 
+              locationTimeZone.textContent = name + ',' + ' ' + country + ' - ' + tz_id
+
+              //current date
+              currentDate.textContent =
+                localTime.getUTCMonth() + 1 + '/' + localTime.getUTCDate() + '/' + localTime.getUTCFullYear()
+
+              // temperature
+              temperatureDegree.textContent = temp_f + " ℉ - " +  temp_c + " ℃"
+
+              //description
+              temperatureDescription.textContent = text
+
+              // icon
+              iconPlacement.innerHTML = imgUrl;
+
+              // handle show/hide content
+              content.classList.remove("d-none");
+              content.classList.add("d-block");
+            } else {
+              noData.classList.remove("d-none");
+              noData.classList.add("d-block");
+            }            
+            loading.classList.remove("d-block");
+            loading.classList.add("d-none");
+          })
+      })
+    </script>
+
+    <style>
+      html, body {
+        height: 100%;
+        font-size: 18px;
+      }
+      html {
+          display: table;
+          margin: auto;
+      }
+      body {
+          display: table-cell;
+          vertical-align: middle;
+      }
+      .loading {
+        font-size: 24px;
+      }
+      .content {
+        display: none;
+      }
+      .d-none {
+        display: none;
+      }
+      .d-block {
+        display: block;
+      }
+      .my-8 {
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body class="body">
+    <div class="loading d-block">Loading...</div>
+    <div class="content d-none">
+      <div class="my-8">
+        <strong>Location:</strong>
+        <span class="location-timezone"></span>
+      </div>
+      <div class="my-8">
+        <strong>Day:</strong> 
+        <span class="current-date"></span>
+      </div>
+      <div class="my-8">
+        <strong>Temperature:</strong>
+        <span class="temperature-degree"></span> </span>
+      </div>
+      <div class="icon"></div>
+      <div class="my-8">
+        <strong>Description:</strong>
+        <span class="temperature-description"></span>
+      </div>
+    </div>
+    <div class="no-data d-none">No data found.</div>
+  </body>
+</html>

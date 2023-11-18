@@ -1,0 +1,6 @@
+Test 1:
+  - Task 1:
+    1. You should start with a design first, carefully choosing fonts, icons, images...
+    2. Divide the website into small components, depending on each application, feature, and control
+    3. Components must ensure reuse and maintain
+    4. Use "css framework" to build websites: for example bootstrap, tailwind....
